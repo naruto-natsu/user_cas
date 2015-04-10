@@ -1,0 +1,16 @@
+CHANGELOG
+=========
+
+Version 1.0
+------------
+ * Initial plugin
+
+Version 1.1
+-----------
+ * Bug sur Activation de l'application
+ * Bug chargement feuille de style Backend
+
+Version 1.2
+-----------
+ * Bug Owncloud 7.03 : Le client de synchronisation ne peut plus se connecter
+ * Bug Double authentification : Impossible de ce connecter à partir d'un compte local.
