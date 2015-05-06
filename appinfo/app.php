@@ -28,7 +28,7 @@
 
 
 global $tabLdapUser;
-
+         
 if (OCP\App::isEnabled('user_cas') && !strstr($_SERVER['REQUEST_URI'],'remote.php') && !strstr($_SERVER['REQUEST_URI'],'cron.php')) {
 
     $CAS_DIR=OCP\Config::getSystemValue('cas_dir', 'error');

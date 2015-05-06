@@ -45,29 +45,36 @@ class OC_USER_CAS_Hooks {
                 $AMU_nuage_pw=OCP\Config::getSystemValue('AMU_nuage_pw', 'error');
                 $PQuota=OCP\Config::getSystemValue('PQuota', 'error');
                 $EQuota=OCP\Config::getSystemValue('EQuota', 'error');
+
                 
+                
+                $LDAP=new LDAP_Infos($serveur_Search,$AMU_nuage_dn,$AMU_nuage_pw,$racineAMUGRP,$racineAMUGRP);
+                $restrictGrp=array("cn","member");                
 
                 /*
                  * Récupération tableau Groupes
+                 * Si le tableau 'groupMapping' est vide pas de contrôle sur les groupes 
                  */
-                $wTabGrp = str_replace( array( '<br>', '<br />', "\n", "\r" ), array( '@', '', '@', '' ), $casBackend->groupMapping );
-                $tabGRP = explode("@",$wTabGrp);
-                $AccesCloudAMU=0;         
-                $LDAP=new LDAP_Infos($serveur_Search,$AMU_nuage_dn,$AMU_nuage_pw,$racineAMUGRP,$racineAMUGRP);
-                $restrictGrp=array("cn","member");
+                $AccesCloud=0;         
+                OC_Log::write('user_cas',"Authentification (Mapping groups=".$casBackend->groupMapping.")"  , OC_Log::DEBUG);
                 
-                $i=0;
-                $mesGroupes=array();
-                foreach ($tabGRP as $key => $value) 
-                {
-                    $ListeMembre = $LDAP->getMembersOfGroup($value,$restrictGrp);
-                    if (in_array($uid,$ListeMembre)) $AccesCloudAMU=1;
+                if ($casBackend->groupMapping) {                    
+                    $wTabGrp = str_replace( array( '<br>', '<br />', "\n", "\r" ), array( '@', '', '@', '' ), $casBackend->groupMapping );
+                    $tabGRP = explode("@",$wTabGrp);
+                    $i=0;
+                    $mesGroupes=array();
+                    foreach ($tabGRP as $key => $value) 
+                    {
+                        $ListeMembre = $LDAP->getMembersOfGroup($value,$restrictGrp);
+                        if (in_array($uid,$ListeMembre)) $AccesCloudAMU=1;
+                    }
+                } else {
+                    $AccesCloud=1;
                 }
-
                 /*
                  * Si pas d'acces, alors déconnexion
                  */
-                if ($AccesCloudAMU==0) {
+                if ($AccesCloud==0) {
 			/*
 			 * On vérifie si le compte utilisé est un compte local
 			 */
@@ -82,27 +89,30 @@ class OC_USER_CAS_Hooks {
 			}
                 }
 
-                /*
-                    * Récupère les groupes liés à l'utilisateur avec la racine définie dans le formulaire 'cas_group_root'
+                /**
+                 * Récupère les groupes liés à l'utilisateur avec la racine définie dans le formulaire 'cas_group_root'
+                 * Si 'cas_group_root' n'est pas renseingé => pas de récupération de groupes
                  */
-                $i=0;
-                $ListeGRP = $LDAP->getMemberOf($uid);
-                
-                $a=sizeof($ListeGRP);
-                OC_Log::write('user_cas',"Taille=".$a." UID=".$uid  , OC_Log::ERROR);
-                OC_Log::write('user_cas',"Racine Groupe=".$casBackend->groupRoot  , OC_Log::ERROR);
-                
-                
-                $mesGroupes="";
-                foreach ($ListeGRP as $key => $value) 
-                {  
-                    if (strstr($value,$casBackend->groupRoot))
-                    {
-                        $mesGroupes[$i]= strtoupper(str_replace(':','_',substr($value,8)));
-                        OC_Log::write('user_cas',"Groupe[$i]=".$mesGroupes[$i]  , OC_Log::ERROR);
-                        $i++;
+                $mesGroupes=array();
+                OC_Log::write('user_cas',"Authentification (Racine Groupes LDAP=".$casBackend->groupRoot.")"  , OC_Log::DEBUG);
+                if ($casBackend->groupRoot) {
+                    $i=0;
+                    $ListeGRP = $LDAP->getMemberOf($uid);
+
+                    $a=sizeof($ListeGRP);
+                    OC_Log::write('user_cas',"Taille=".$a." UID=".$uid  , OC_Log::ERROR);
+                    OC_Log::write('user_cas',"Racine Groupe=".$casBackend->groupRoot  , OC_Log::ERROR);
+
+                    foreach ($ListeGRP as $key => $value) 
+                    {  
+                        if (strstr($value,$casBackend->groupRoot))
+                        {
+                            $mesGroupes[$i]= strtoupper(str_replace(':','_',substr($value,8)));
+                            OC_Log::write('user_cas',"Groupe[$i]=".$mesGroupes[$i]  , OC_Log::ERROR);
+                            $i++;
+                        }
+
                     }
-                    
                 }
                 
 		if (phpCAS::checkAuthentication()) {
@@ -141,8 +151,10 @@ class OC_USER_CAS_Hooks {
                             /*
                              * Mise à jour des groupes associés
                              */
-                            $cas_groups = $mesGroupes;
-                            update_groups($uid, $cas_groups, $casBackend->protectedGroups, true);
+                            if (sizeof($mesGroupes)>0) {
+                                $cas_groups = $mesGroupes;
+                                update_groups($uid, $cas_groups, $casBackend->protectedGroups, true);
+                            }
                             /*
                              * Mise à jour du mail
                              */

@@ -1,13 +1,16 @@
-<?xml version="1.2"?>
+<?xml version="1.0"?>
 <info>
 	<id>user_cas</id>
 	<name>CAS user and group backend</name>
 	<description>Authentification CAS plus gestion des groupes LDAP</description>
 	<licence>AGPL</licence>
 	<author>Pascal AVALLE Aix-Marseille University</author>
-	<require>6.0</require>
+	<requiremin>6.0</requiremin>
+        <shipped>true</shipped>
 	<types>
-        <prelogin/>
-        <authentication/>
+            <authentication/>
 	</types>
+        <dependencies>
+            <lib>ldap</lib>
+        </dependencies>
 </info>
