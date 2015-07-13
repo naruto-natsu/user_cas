@@ -23,4 +23,10 @@ Version 1.3
 -----------
  * Droit d'accès : 
    - Le mapping des groupes LDAP n'est plus obligatoire.
+
+Version 1.3.1
+-----------
+ * Bug Gestion des quotas : Le Module CAS prend en compte les quotas seulement, s'ils sont spécifiés dans le fichier de configuration (config/config.php)
+
+
  

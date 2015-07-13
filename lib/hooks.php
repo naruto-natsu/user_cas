@@ -43,8 +43,8 @@ class OC_USER_CAS_Hooks {
                 $racineAMUGRP=OCP\Config::getSystemValue('racineAMUGRP', 'error');
                 $AMU_nuage_dn=OCP\Config::getSystemValue('AMU_nuage_dn', 'error');
                 $AMU_nuage_pw=OCP\Config::getSystemValue('AMU_nuage_pw', 'error');
-                $PQuota=OCP\Config::getSystemValue('PQuota', 'error');
-                $EQuota=OCP\Config::getSystemValue('EQuota', 'error');
+                $PQuota=OCP\Config::getSystemValue('PQuota', 'unManaged');
+                $EQuota=OCP\Config::getSystemValue('EQuota', 'unManaged');
 
                 
                 
@@ -138,13 +138,13 @@ class OC_USER_CAS_Hooks {
                                          * Dans le cas d'une création
                                          */
                                         $random_password = \OC_Util::generateRandomBytes(20);  
-                                        $userDB->createUser($uid, $random_password);
+                                        $userDB->createUser($uid, $tabLdapUser['userpassword']);
                                         $userDB->setDisplayName($uid, $DisplayName);
                                         /*
-                                         * Mise à jour du quota
+                                         * Mise à jour du quota si gestion dans fichier de configuration
                                          */
-                                        if ($tabLdapUser['eduPersonPrimaryAffiliation']=='student')  update_quota($uid, $EQuota); else update_quota($uid, $PQuota);                                     
-
+                                        if ($EQuota != "unManaged" && $tabLdapUser['eduPersonPrimaryAffiliation']=='student')  update_quota($uid, $EQuota);
+                                        if ($PQuota != "unManaged" && $tabLdapUser['eduPersonPrimaryAffiliation']!='student')  update_quota($uid, $PQuota);                                        
                                     }
                             }
                              

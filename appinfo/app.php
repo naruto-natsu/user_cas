@@ -28,8 +28,19 @@
 
 
 global $tabLdapUser;
+$baseAuthentification="CAS";
          
-if (OCP\App::isEnabled('user_cas') && !strstr($_SERVER['REQUEST_URI'],'remote.php') && !strstr($_SERVER['REQUEST_URI'],'cron.php')) {
+
+if (OCP\App::isEnabled('user_cas') && strstr($_SERVER['REQUEST_URI'],'remote.php')) {
+    $baseAuthentification="local";
+}
+
+if (OCP\App::isEnabled('user_cas') && strstr($_SERVER['REQUEST_URI'],'cron.php')) {
+    $baseAuthentification="local";
+}
+
+//if (OCP\App::isEnabled('user_cas') && !strstr($_SERVER['REQUEST_URI'],'remote.php') && !strstr($_SERVER['REQUEST_URI'],'cron.php')) {
+if (OCP\App::isEnabled('user_cas') && $baseAuthentification == "CAS") {
 
     $CAS_DIR=OCP\Config::getSystemValue('cas_dir', 'error');
 
