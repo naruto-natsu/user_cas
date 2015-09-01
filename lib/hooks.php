@@ -181,17 +181,35 @@ class OC_USER_CAS_Hooks {
 }
 
 function update_mail($uid, $email) {
-	if ($email != OC_Preferences::getValue($uid, 'settings', 'email', '')) {
-		OC_Preferences::setValue($uid, 'settings', 'email', $email);
+    $config = \OC::$server->getConfig();
+    if ($email != $config->getUserValue($uid, 'settings', 'email', '')) {
+		$config->setUserValue($uid, 'settings', 'email', $email);
 		OC_Log::write('cas','Set email "'.$email.'" for the user: '.$uid, OC_Log::DEBUG);
-	}
+    }
+    /* Deprecated classe in 8.1
+    if ($email != OC_Preferences::getValue($uid, 'settings', 'email', '')) {
+            OC_Preferences::setValue($uid, 'settings', 'email', $email);
+            OC_Log::write('cas','Set email "'.$email.'" for the user: '.$uid, OC_Log::DEBUG);
+    }
+     * 
+     */
 }
 
 function update_quota($uid, $quota) {
-	if ($quota != OC_Preferences::getValue($uid, 'files', 'quota', '')) {
-		OC_Preferences::setValue($uid, 'files', 'quota', $quota);
-		OC_Log::write('cas','Set quota "'.$quota.'" for the user: '.$uid, OC_Log::DEBUG);
-	}
+    $config = \OC::$server->getConfig();
+    if ($quota != $config->getUserValue($uid, 'files', 'quota', '')) {
+            $config->setUserValue($uid, 'files', 'quota', $quota);
+            OC_Log::write('cas','Set quota "'.$quota.'" for the user: '.$uid, OC_Log::DEBUG);
+    }
+    /* Deprecated classe in 8.1
+    if ($quota != OC_Preferences::getValue($uid, 'files', 'quota', '')) {
+            OC_Preferences::setValue($uid, 'files', 'quota', $quota);
+            OC_Log::write('cas','Set quota "'.$quota.'" for the user: '.$uid, OC_Log::DEBUG);
+    }
+     * 
+     */
+    
+    
 }
 function update_groups($uid, $groups, $protected_groups=array(), $just_created=false) {
 
