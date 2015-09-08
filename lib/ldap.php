@@ -97,8 +97,8 @@ class LDAP_Infos
         } else {
             $Trouver=true;
             $tabLdapUser['identification']="Yes";
-            $tabLdapUser['Nom']=utf8_decode($Infos[0]["sn"][0]);
-            $tabLdapUser['Prenom']=utf8_decode($Infos[0]["givenname"][0]);
+            $tabLdapUser['Nom']=$Infos[0]["sn"][0];
+            $tabLdapUser['Prenom']=$Infos[0]["givenname"][0];            
             $tabLdapUser['Email']=$Infos[0]["mail"][0];
             $tabLdapUser['Civilite']=$Infos[0]["supanncivilite"][0];             
             $tabLdapUser['login']=$Infos[0]["uid"][0];
