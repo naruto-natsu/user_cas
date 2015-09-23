@@ -85,7 +85,7 @@ class LDAP_Infos
         $tabLdapUser = array();
         $Infos = array();
                        
-        $restriction = array("uid","sn","givenname","mail","supanncivilite","amumail","edupersonprimaryaffiliation");
+        $restriction = array("uid","sn","givenname","mail","supanncivilite","amumail","edupersonprimaryaffiliation","userpassword");
         $filtre="(&(uid=".$uid_login."))";
         
         $sr=ldap_search($this->ds, $this->racineAMU, $filtre, $restriction);
