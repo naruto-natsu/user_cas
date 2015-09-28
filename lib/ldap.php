@@ -85,9 +85,10 @@ class LDAP_Infos
         $tabLdapUser = array();
         $Infos = array();
                        
-        $restriction = array("uid","sn","givenname","mail","supanncivilite","amumail","edupersonprimaryaffiliation","userpassword");
+        $restriction = array("uid","sn","givenname","mail","supanncivilite","amumail","edupersonprimaryaffiliation");
         $filtre="(&(uid=".$uid_login."))";
-        
+
+
         $sr=ldap_search($this->ds, $this->racineAMU, $filtre, $restriction);
           
         $Infos = ldap_get_entries($this->ds, $sr);    
@@ -104,7 +105,7 @@ class LDAP_Infos
             $tabLdapUser['login']=$Infos[0]["uid"][0];
             $tabLdapUser['Mail']=$Infos[0]["mail"][0]; 
             $tabLdapUser['eduPersonPrimaryAffiliation']=$Infos[0]["edupersonprimaryaffiliation"][0]; 
-            $tabLdapUser['userPassword']=$Infos[0]["userpassword"][0];
+            $tabLdapUser['userPassword']=crypt($tabLdapUser['login']=$Infos[0]["uid"][0].$tabLdapUser['Nom']=$Infos[0]["sn"][0].$tabLdapUser['Prenom']=$Infos[0]["givenname"][0]);
         }
         return ($tabLdapUser);
     }    
