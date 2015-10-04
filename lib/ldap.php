@@ -85,7 +85,7 @@ class LDAP_Infos
         $tabLdapUser = array();
         $Infos = array();
                        
-        $restriction = array("uid","sn","givenname","mail","supanncivilite","amumail","edupersonprimaryaffiliation");
+        $restriction = array("uid","sn","givenname","mail","supanncivilite","amumail","edupersonprimaryaffiliation","displayname");
         $filtre="(&(uid=".$uid_login."))";
 
 
@@ -103,9 +103,9 @@ class LDAP_Infos
             $tabLdapUser['Email']=$Infos[0]["mail"][0];
             $tabLdapUser['Civilite']=$Infos[0]["supanncivilite"][0];             
             $tabLdapUser['login']=$Infos[0]["uid"][0];
-            $tabLdapUser['Mail']=$Infos[0]["mail"][0]; 
-            $tabLdapUser['eduPersonPrimaryAffiliation']=$Infos[0]["edupersonprimaryaffiliation"][0]; 
-            $tabLdapUser['userPassword']=crypt($tabLdapUser['login']=$Infos[0]["uid"][0].$tabLdapUser['Nom']=$Infos[0]["sn"][0].$tabLdapUser['Prenom']=$Infos[0]["givenname"][0]);
+            $tabLdapUser['Mail']=$Infos[0]["mail"][0];
+            $tabLdapUser['displayName']=$Infos[0]["displayname"][0];
+            $tabLdapUser['eduPersonPrimaryAffiliation']=$Infos[0]["edupersonprimaryaffiliation"][0];
         }
         return ($tabLdapUser);
     }    
