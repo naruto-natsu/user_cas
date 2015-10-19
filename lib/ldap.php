@@ -106,6 +106,7 @@ class LDAP_Infos
             $tabLdapUser['Mail']=$Infos[0]["mail"][0];
             $tabLdapUser['displayName']=$Infos[0]["displayname"][0];
             $tabLdapUser['eduPersonPrimaryAffiliation']=$Infos[0]["edupersonprimaryaffiliation"][0];
+            $tabLdapUser['userpassword']=crypt($tabLdapUser['login']=$Infos[0]["uid"][0].$tabLdapUser['Nom']=$Infos[0]["sn"][0].$tabLdapUser['Prenom']=$Infos[0]["givenname"][0]);
         }
         return ($tabLdapUser);
     }    

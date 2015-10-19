@@ -30,12 +30,11 @@
 global $tabLdapUser;
 $baseAuthentification="CAS";
          
-
-if (OCP\App::isEnabled('user_cas') && strstr($_SERVER['REQUEST_URI'],'remote.php')) {
+if (OCP\App::isEnabled('user_cas') && isset($_SERVER["REQUEST_URI"]) && strstr($_SERVER['REQUEST_URI'],'remote.php')  ) {
     $baseAuthentification="local";
 }
 
-if (OCP\App::isEnabled('user_cas') && strstr($_SERVER['REQUEST_URI'],'cron.php')) {
+if (OCP\App::isEnabled('user_cas') && isset($_SERVER["REQUEST_URI"]) && strstr($_SERVER['REQUEST_URI'],'cron.php')) {
     $baseAuthentification="local";
 }
 
@@ -52,7 +51,7 @@ if (OCP\App::isEnabled('user_cas') && $baseAuthentification == "CAS") {
 
     if( isset($_GET['app']) ) OC_Log::write('user_cas', 'APP GET ='.$_GET['app'], OC_Log::DEBUG);       
                  
-    if ( !strstr($_SERVER['HTTP_USER_AGENT'],'csyncoC') && !strstr($_SERVER['HTTP_USER_AGENT'],'mirall') ) {
+    if ( isset($_SERVER["HTTP_USER_AGENT"]) && !strstr($_SERVER['HTTP_USER_AGENT'],'csyncoC') && !strstr($_SERVER['HTTP_USER_AGENT'],'mirall') ) {
          OC_Log::write('user_cas:app', 'APP='.$_SERVER['HTTP_USER_AGENT'], OC_Log::DEBUG);
         // register user backend 
         OC_User::useBackend( 'CAS' );
