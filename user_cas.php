@@ -3,7 +3,7 @@
  * ownCloud - user_cas
  *
  * Base de départ : Développement de Sixto Martin <sixto.martin.garcia@gmail.com> 2012
- * 
+ *
  * @author Pascal AVALLE <pascal.avalle@univ-amu.fr>
  * @copyright Aix Marseille Université - 2014
  *
@@ -33,9 +33,9 @@ class OC_USER_CAS extends OC_User_Backend {
 	public $groupMapping;
         public $groupRoot;
         protected static $_InitCAS = false;
-        
+
 	public function __construct() {
-	
+
 		$this->autocreate = OCP\Config::getAppValue('user_cas', 'cas_autocreate', true);
 		$this->updateUserData = OCP\Config::getAppValue('user_cas', 'cas_update_user_data', true);
 		$this->defaultGroup = OCP\Config::getAppValue('user_cas', 'cas_default_group', 'TEST');
@@ -44,11 +44,11 @@ class OC_USER_CAS extends OC_User_Backend {
 		$this->groupMapping = OCP\Config::getAppValue('user_cas', 'cas_group_mapping', '');
                 $this->groupRoot = OCP\Config::getAppValue('user_cas', 'cas_group_root', '');
 		$this->aliasName = OCP\Config::getAppValue('user_cas', 'cas_aliasName', '');
- 
+
             	$casVersion = OCP\Config::getAppValue('user_cas', 'cas_server_version', '2.0');
 	        $casHostname = OCP\Config::getAppValue('user_cas', 'cas_server_hostname', 'ident.domain.fr');
 	        $casPort = OCP\Config::getAppValue('user_cas', 'cas_server_port', '443');
-	        $casPath = OCP\Config::getAppValue('user_cas', 'cas_server_path', '/cas');                
+	        $casPath = OCP\Config::getAppValue('user_cas', 'cas_server_path', '/cas');
 
                 self :: InitCAS();
 
@@ -61,26 +61,26 @@ class OC_USER_CAS extends OC_User_Backend {
 	        $casHostname = OCP\Config::getAppValue('user_cas', 'cas_server_hostname', 'ident.domain.fr');
 	        $casPort = OCP\Config::getAppValue('user_cas', 'cas_server_port', '443');
 	        $casPath = OCP\Config::getAppValue('user_cas', 'cas_server_path', '/cas');
-                
+
                 phpCAS::client($casVersion,$casHostname,(int)$casPort,$casPath,false);
                 if ( $aliasName ) phpCAS::setFixedServiceURL($aliasName);
                 phpCAS::setNoCasServerValidation();
-                        
+
                 self :: $_InitCAS = true;
             }
             return self :: $_InitCAS;
 
         }
-        
+
 	public function checkPassword($uid, $password) {
-            	
+
 		if(!phpCAS::forceAuthentication()) {
 			return false;
 		}
 
 		$uid = phpCAS::getUser();
 		if ($uid === false) {
-			OC_Log::write('user_cas','phpCAS return no user !', OC_Log::ERROR);
+			OCP\Util::writeLog('user_cas','phpCAS return no user !', OCP\Util::ERROR);
 			return false;
 		}
 		return $uid;
