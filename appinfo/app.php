@@ -49,10 +49,10 @@ if (OCP\App::isEnabled('user_cas') && $baseAuthentification == "CAS") {
 
     OCP\App::registerAdmin('user_cas', 'settings');
 
-    if( isset($_GET['app']) ) OCP\Util:writeLog('user_cas', 'APP GET ='.$_GET['app'], OCP\Util::DEBUG);
+    if( isset($_GET['app']) ) OCP\Util::writeLog('user_cas', 'APP GET ='.$_GET['app'], OCP\Util::DEBUG);
 
     if ( isset($_SERVER["HTTP_USER_AGENT"]) && !strstr($_SERVER['HTTP_USER_AGENT'],'csyncoC') && !strstr($_SERVER['HTTP_USER_AGENT'],'mirall') ) {
-         OCP\Util:writeLog('user_cas:app', 'APP='.$_SERVER['HTTP_USER_AGENT'], OCP\Util::DEBUG);
+         OCP\Util::writeLog('user_cas:app', 'APP='.$_SERVER['HTTP_USER_AGENT'], OCP\Util::DEBUG);
         // register user backend
         OC_User::useBackend( 'CAS' );
         OC::$CLASSPATH['OC_USER_CAS_Hooks'] = 'user_cas/lib/hooks.php';
@@ -68,7 +68,7 @@ if (OCP\App::isEnabled('user_cas') && $baseAuthentification == "CAS") {
 
         if (!OC_User::login('', '')) {
                 $error = true;
-                OCP\Util:writeLog('cas','Error trying to authenticate the user', OCP\Util::DEBUG);
+                OCP\Util::writeLog('cas','Error trying to authenticate the user', OCP\Util::DEBUG);
         }
         OC::$REQUESTEDAPP = '';
         OC_Util::redirectToDefaultPage();
