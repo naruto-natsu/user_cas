@@ -3,7 +3,7 @@
  * ownCloud - user_cas
  *
  * Base de départ : Développement de Sixto Martin <sixto.martin.garcia@gmail.com> 2012
- * 
+ *
  * @author Pascal AVALLE <pascal.avalle@univ-amu.fr>
  * @copyright Aix Marseille Université - 2014
  *
@@ -29,7 +29,7 @@
 
 global $tabLdapUser;
 $baseAuthentification="CAS";
-         
+
 if (OCP\App::isEnabled('user_cas') && isset($_SERVER["REQUEST_URI"]) && strstr($_SERVER['REQUEST_URI'],'remote.php')  ) {
     $baseAuthentification="local";
 }
@@ -49,11 +49,11 @@ if (OCP\App::isEnabled('user_cas') && $baseAuthentification == "CAS") {
 
     OCP\App::registerAdmin('user_cas', 'settings');
 
-    if( isset($_GET['app']) ) OC_Log::write('user_cas', 'APP GET ='.$_GET['app'], OC_Log::DEBUG);       
-                 
+    if( isset($_GET['app']) ) OCP\Util:writeLog('user_cas', 'APP GET ='.$_GET['app'], OCP\Util::DEBUG);
+
     if ( isset($_SERVER["HTTP_USER_AGENT"]) && !strstr($_SERVER['HTTP_USER_AGENT'],'csyncoC') && !strstr($_SERVER['HTTP_USER_AGENT'],'mirall') ) {
-         OC_Log::write('user_cas:app', 'APP='.$_SERVER['HTTP_USER_AGENT'], OC_Log::DEBUG);
-        // register user backend 
+         OCP\Util:writeLog('user_cas:app', 'APP='.$_SERVER['HTTP_USER_AGENT'], OCP\Util::DEBUG);
+        // register user backend
         OC_User::useBackend( 'CAS' );
         OC::$CLASSPATH['OC_USER_CAS_Hooks'] = 'user_cas/lib/hooks.php';
         OCP\Util::connectHook('OC_User', 'post_login', 'OC_USER_CAS_Hooks', 'post_login');
@@ -64,11 +64,11 @@ if (OCP\App::isEnabled('user_cas') && $baseAuthentification == "CAS") {
     if( isset($_GET['app']) && $_GET['app'] == 'user_cas' ) {
 
         OC_USER_CAS :: InitCAS();
-        phpCAS::setNoCasServerValidation(); 
+        phpCAS::setNoCasServerValidation();
 
         if (!OC_User::login('', '')) {
                 $error = true;
-                OC_Log::write('cas','Error trying to authenticate the user', OC_Log::DEBUG);
+                OCP\Util:writeLog('cas','Error trying to authenticate the user', OCP\Util::DEBUG);
         }
         OC::$REQUESTEDAPP = '';
         OC_Util::redirectToDefaultPage();
