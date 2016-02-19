@@ -30,4 +30,7 @@ Version 1.3.1
  * Bug Gestion des quotas : Le Module CAS prend en compte les quotas seulement, s'ils sont spécifiés dans le fichier de configuration (config/config.php)
 
  * Index indéfini : 
- 
+
+Version 1.3.2
+-----------
+ * Compatibilité owncloud 8.2.x
