@@ -6,13 +6,11 @@
 	<licence>AGPL</licence>
 	<author>Pascal AVALLE Aix-Marseille University</author>
 	<shipped>true</shipped>
-	<version>1.3.2</version>
-        <shipped>true</shipped>
 	<types>
             <authentication/>
 	</types>
-        <dependencies>
-            <lib>ldap</lib>
-			<owncloud min-version=""7.0" />
-        </dependencies>
+	<dependencies>
+    	<lib>ldap</lib>
+		<owncloud min-version="7.0" />
+    </dependencies>
 </info>
