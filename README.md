@@ -2,6 +2,7 @@ INTRODUCTION
 ============
 
 This App provide CAS authentication support, using the phpCAS library of Jasig.
+Owncloud Tools
 
 
 INSTALLATION
