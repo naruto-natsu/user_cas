@@ -80,23 +80,25 @@ class LDAP_Infos
      * @param type $uid_login
      * @return type $tabLdapUser tableau
      */    
-    function getUserInfo($uid_login) {
+    function getUserInfo($uid_login,$filtreLDAP = null) {
 
-        $tabLdapUser = array();
+        $tabLdapUser = null;
         $Infos = array();
                        
         $restriction = array("uid","sn","givenname","mail","supanncivilite","amumail","edupersonprimaryaffiliation","displayname");
+
         $filtre="(&(uid=".$uid_login."))";
 
+        if ($filtreLDAP) {
+            $filtre=str_replace('%uid',$uid_login,$filtreLDAP);
+        }
+        OCP\Util::writeLog('cas', 'ldap filtre  ['. $filtre .']', OCP\Util::DEBUG);
 
         $sr=ldap_search($this->ds, $this->racineAMU, $filtre, $restriction);
           
         $Infos = ldap_get_entries($this->ds, $sr);    
                 
-        if ($Infos["count"] == 0) {           
-            $Trouver=false;
-        } else {
-            $Trouver=true;
+        if ($Infos["count"] > 0) {
             $tabLdapUser['identification']="Yes";
             $tabLdapUser['Nom']=$Infos[0]["sn"][0];
             $tabLdapUser['Prenom']=$Infos[0]["givenname"][0];            
@@ -109,5 +111,6 @@ class LDAP_Infos
             $tabLdapUser['userpassword']=crypt($tabLdapUser['login']=$Infos[0]["uid"][0].$tabLdapUser['Nom']=$Infos[0]["sn"][0].$tabLdapUser['Prenom']=$Infos[0]["givenname"][0]);
         }
         return ($tabLdapUser);
-    }    
+    }
 }
+

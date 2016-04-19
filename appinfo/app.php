@@ -46,6 +46,7 @@ if (OCP\App::isEnabled('user_cas') && $baseAuthentification == "CAS") {
     require_once 'user_cas/user_cas.php';
     include_once ($CAS_DIR.'/CAS.php');
     include_once ('user_cas/lib/ldap.php');
+    include_once ('user_cas/lib/ldapFiltre.php');
 
     OCP\App::registerAdmin('user_cas', 'settings');
 

@@ -31,8 +31,8 @@ class OC_USER_CAS extends OC_User_Backend {
 	public $defaultGroup;
 	public $mailMapping;
 	public $groupMapping;
-        public $groupRoot;
-        protected static $_InitCAS = false;
+    public $groupRoot;
+    protected static $_InitCAS = false;
 
 	public function __construct() {
 
@@ -42,35 +42,35 @@ class OC_USER_CAS extends OC_User_Backend {
 		$this->protectedGroups = explode (',', str_replace(' ', '', OCP\Config::getAppValue('user_cas', 'cas_protected_groups', '')));
 		$this->mailMapping = OCP\Config::getAppValue('user_cas', 'cas_email_mapping', '');
 		$this->groupMapping = OCP\Config::getAppValue('user_cas', 'cas_group_mapping', '');
-                $this->groupRoot = OCP\Config::getAppValue('user_cas', 'cas_group_root', '');
+        $this->groupRoot = OCP\Config::getAppValue('user_cas', 'cas_group_root', '');
 		$this->aliasName = OCP\Config::getAppValue('user_cas', 'cas_aliasName', '');
 
-            	$casVersion = OCP\Config::getAppValue('user_cas', 'cas_server_version', '2.0');
-	        $casHostname = OCP\Config::getAppValue('user_cas', 'cas_server_hostname', 'ident.domain.fr');
-	        $casPort = OCP\Config::getAppValue('user_cas', 'cas_server_port', '443');
-	        $casPath = OCP\Config::getAppValue('user_cas', 'cas_server_path', '/cas');
+        $casVersion = OCP\Config::getAppValue('user_cas', 'cas_server_version', '2.0');
+		$casHostname = OCP\Config::getAppValue('user_cas', 'cas_server_hostname', 'ident.domain.fr');
+		$casPort = OCP\Config::getAppValue('user_cas', 'cas_server_port', '443');
+		$casPath = OCP\Config::getAppValue('user_cas', 'cas_server_path', '/cas');
 
-                self :: InitCAS();
+        self :: InitCAS();
 
-        }
+	}
 
-        public static function InitCAS () {
-            if(!self :: $_InitCAS) {
-                $aliasName = OCP\Config::getAppValue('user_cas', 'cas_aliasName', '');
-            	$casVersion = OCP\Config::getAppValue('user_cas', 'cas_server_version', '2.0');
-	        $casHostname = OCP\Config::getAppValue('user_cas', 'cas_server_hostname', 'ident.domain.fr');
-	        $casPort = OCP\Config::getAppValue('user_cas', 'cas_server_port', '443');
-	        $casPath = OCP\Config::getAppValue('user_cas', 'cas_server_path', '/cas');
+	public static function InitCAS () {
+		if(!self :: $_InitCAS) {
+			$aliasName = OCP\Config::getAppValue('user_cas', 'cas_aliasName', '');
+			$casVersion = OCP\Config::getAppValue('user_cas', 'cas_server_version', '2.0');
+		$casHostname = OCP\Config::getAppValue('user_cas', 'cas_server_hostname', 'ident.domain.fr');
+		$casPort = OCP\Config::getAppValue('user_cas', 'cas_server_port', '443');
+		$casPath = OCP\Config::getAppValue('user_cas', 'cas_server_path', '/cas');
 
-                phpCAS::client($casVersion,$casHostname,(int)$casPort,$casPath,false);
-                if ( $aliasName ) phpCAS::setFixedServiceURL($aliasName);
-                phpCAS::setNoCasServerValidation();
+			phpCAS::client($casVersion,$casHostname,(int)$casPort,$casPath,false);
+			if ( $aliasName ) phpCAS::setFixedServiceURL($aliasName);
+			phpCAS::setNoCasServerValidation();
 
-                self :: $_InitCAS = true;
-            }
-            return self :: $_InitCAS;
+			self :: $_InitCAS = true;
+		}
+		return self :: $_InitCAS;
 
-        }
+	}
 
 	public function checkPassword($uid, $password) {
 

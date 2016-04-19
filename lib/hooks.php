@@ -28,6 +28,10 @@
 class OC_USER_CAS_Hooks
 {
 
+    /**
+     * @param $parameters
+     * @return bool
+     */
     static public function post_login($parameters)
     {
         $uid = $parameters['uid'];
@@ -50,6 +54,10 @@ class OC_USER_CAS_Hooks
 
         $LDAP = new LDAP_Infos($serveur_Search, $AMU_nuage_dn, $AMU_nuage_pw, $racineAMUGRP, $racineAMUGRP);
         $restrictGrp = array("cn", "member");
+
+
+        $filtreLDAP = new LDAP_filtre();
+
 
         /*
          * Récupération tableau Groupes
@@ -121,10 +129,20 @@ class OC_USER_CAS_Hooks
                 /*
                  * Récupération des information utilisateur (LDAP)
                  */
-                $tabLdapUser = $LDAP->getUserInfo($uid);
-                if ($tabLdapUser) $DisplayName = $tabLdapUser['displayName'];
+
+                $fLDAP = $filtreLDAP->findFiltre();
+                OCP\Util::writeLog('cas', 'Lecture Filtre LDAP "' . $fLDAP . '"', OCP\Util::DEBUG);
+                $tabLdapUser = $LDAP->getUserInfo($uid,$fLDAP);
+
+                if ($tabLdapUser != null)
+                    $DisplayName = $tabLdapUser['displayName'];
+                else {
+                    OCP\Util::writeLog('user_cas', "Aucun droit d'acces pour l'utilisateur " . $uid, OCP\Util::ERROR);
+                    \OC_User::logout();
+                }
 
                 if (!$userDB->userExists($uid)) {
+
                     if (preg_match('/[^a-zA-Z0-9 _\.@\-]/', $uid)) {
                         OCP\Util::writeLog('cas', 'Utilisateur  invalide "' . $uid . '", caracteres autorises "a-zA-Z0-9" and "_.@-" ', OCP\Util::DEBUG);
                         return false;
@@ -183,13 +201,6 @@ function update_mail($uid, $email)
         $config->setUserValue($uid, 'settings', 'email', $email);
         OCP\Util::writeLog('cas', 'Set email "' . $email . '" for the user: ' . $uid, OCP\Util::DEBUG);
     }
-    /* Deprecated classe in 8.1
-    if ($email != OC_Preferences::getValue($uid, 'settings', 'email', '')) {
-            OC_Preferences::setValue($uid, 'settings', 'email', $email);
-            OCP\Util::writeLog('cas','Set email "'.$email.'" for the user: '.$uid, OCP\Util::DEBUG);
-    }
-     *
-     */
 }
 
 function update_quota($uid, $quota)
@@ -199,14 +210,6 @@ function update_quota($uid, $quota)
         $config->setUserValue($uid, 'files', 'quota', $quota);
         OCP\Util::writeLog('cas', 'Set quota "' . $quota . '" for the user: ' . $uid, OCP\Util::DEBUG);
     }
-    /* Deprecated classe in 8.1
-    if ($quota != OC_Preferences::getValue($uid, 'files', 'quota', '')) {
-            OC_Preferences::setValue($uid, 'files', 'quota', $quota);
-            OCP\Util::writeLog('cas','Set quota "'.$quota.'" for the user: '.$uid, OCP\Util::DEBUG);
-    }
-     *
-     */
-
 
 }
 
